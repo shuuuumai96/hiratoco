@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-dns-prefetch-control" content="off">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="extensionName">Hiratoco — Webアプリランチャー</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="popup.js"></script>
+</head>
+<body class="popup">
+  <header class="popup-header"><h1 data-i18n="popupTitle">アプリ</h1><button id="edit" type="button" title="アプリと表示設定を編集" data-i18n="edit" data-i18n-title="editTooltip">編集</button></header>
+  <main aria-label="アプリランチャー" data-i18n-aria-label="launcherLabel">
+    <p id="notice" role="status" hidden></p>
+    <ul id="apps" class="app-grid" aria-label="登録済みアプリ" data-i18n-aria-label="registeredApps"></ul>
+    <p id="empty" class="empty" data-i18n="popupEmpty" hidden>アプリがありません。「編集」から追加できます。</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extensionName__",
+  "version": "0.1.0",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_title": "Hiratoco",
+    "default_popup": "popup.html",
+    "default_icon": "icons/launcher.svg",
+    "theme_icons": [
+      {
+        "light": "icons/toolbar-light.svg",
+        "dark": "icons/toolbar-dark.svg",
+        "size": 32
+      }
+    ]
+  },
+  "icons": {
+    "48": "icons/launcher.svg",
+    "96": "icons/launcher.svg"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "appdock@personal.local",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"
+  }
+}

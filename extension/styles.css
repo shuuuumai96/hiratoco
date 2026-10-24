@@ -1,0 +1,104 @@
+:root {
+  color-scheme: light;
+  --page: #f4f6fa;
+  --surface: #fff;
+  --text: #202124;
+  --muted: #59616e;
+  --line: #dce1e9;
+  --hover: #eaf1fc;
+  --accent: #185abc;
+  --accent-text: #fff;
+  --danger: #b3261e;
+  --notice: #fff3d5;
+  font: 14px/1.55 "Segoe UI", "Yu Gothic UI", Meiryo, sans-serif;
+  background: var(--surface);
+  color: var(--text);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #17191f; --surface: #23262e; --text: #edf0f6; --muted: #b5bdcb;
+    --line: #474e5c; --hover: #303e54; --accent: #a8c7fa; --accent-text: #142a4d; --danger: #ffb4ab; --notice: #473b21;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #17191f; --surface: #23262e; --text: #edf0f6; --muted: #b5bdcb;
+  --line: #474e5c; --hover: #303e54; --accent: #a8c7fa; --accent-text: #142a4d; --danger: #ffb4ab; --notice: #473b21;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+h1, h2, p { margin: 0; }
+h1 { font-size: 25px; font-weight: 650; }
+h2 { font-size: 17px; font-weight: 600; }
+button, input, select { font: inherit; }
+button, select { border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--text); padding: 7px 12px; }
+button { cursor: pointer; white-space: nowrap; }
+button:hover:not(:disabled), select:hover { background: var(--hover); }
+button:disabled { opacity: .45; cursor: default; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+.primary:hover:not(:disabled) { background: var(--accent); filter: brightness(.92); }
+.danger { color: var(--danger); }
+.popup { width: 340px; background: var(--surface); border-radius: 20px; overflow: hidden; }
+.popup-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px; }
+.popup-header h1 { font-size: 17px; }
+.popup-header button { color: var(--accent); border: none; padding: 5px 10px; }
+.popup main { max-height: 460px; overflow-y: auto; scrollbar-width: thin; padding: 4px 12px 10px; }
+.app-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; list-style: none; padding: 0; margin: 0; }
+.app-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 14px 4px 12px; border-radius: 14px; color: var(--text); text-decoration: none; }
+.app-tile:hover { background: var(--hover); }
+.app-tile:focus-visible { outline-offset: -3px; background: var(--hover); }
+.app-tile img { width: 44px; height: 44px; object-fit: contain; }
+.app-tile span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+#notice { padding: 12px; background: var(--notice); border-radius: 10px; margin-bottom: 12px; font-size: 13px; }
+.empty { padding: 24px 12px; color: var(--muted); text-align: center; }
+.options { background: var(--page); min-height: 100vh; }
+.settings-shell { max-width: 850px; margin: 0 auto; padding: 44px 28px; }
+.settings-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.eyebrow { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .14em; margin-bottom: 8px; }
+.description { color: var(--muted); margin: 16px 0; }
+#status { color: var(--accent); min-height: 24px; margin-bottom: 8px; }
+.appearance { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); margin-bottom: 32px; }
+.setting-field { display: flex; align-items: center; gap: 12px; }
+.section-heading { margin-bottom: 8px; }
+#count { color: var(--muted); font-size: 13px; font-weight: 400; }
+.hint { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+.editor-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.editor-row { display: flex; align-items: center; gap: 14px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 13px; }
+.editor-row img { width: 36px; height: 36px; object-fit: contain; }
+.grip { cursor: grab; color: var(--muted); font-size: 22px; }
+.row-text { flex: 1; min-width: 0; }
+.row-text strong, .row-text span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row-text strong { font-weight: 600; }
+.row-text span { color: var(--muted); font-size: 12px; }
+.row-actions { display: flex; gap: 5px; }
+.row-actions button { padding: 5px 8px; font-size: 12px; }
+.dragging { opacity: .45; }
+.drop-target { outline: 2px solid var(--accent); background: var(--hover); }
+.settings-footer { margin-top: 30px; color: var(--muted); font-size: 12px; }
+dialog { background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 18px; padding: 26px; width: min(460px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; }
+dialog::backdrop { background: #10182899; }
+dialog h2 { margin-bottom: 20px; }
+dialog label { display: block; font-weight: 600; margin: 16px 0 6px; }
+dialog input { width: 100%; background: var(--page); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+input[type="file"] { padding: 6px; font-size: 12px; }
+#image-help { margin-top: 6px; }
+.image-preview { display: flex; gap: 16px; align-items: center; margin: 12px 0; }
+.image-preview img { object-fit: contain; }
+#form-error, #repair-error, #data-error { color: var(--danger); font-size: 13px; }
+.data-management { margin-top: 32px; padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.data-management h2 { margin-bottom: 12px; }
+.data-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+#backup-count { margin-bottom: 8px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+@media (max-width: 640px) {
+  .settings-shell { padding: 24px 16px; }
+  .settings-header { align-items: flex-start; }
+  .settings-header .primary { font-size: 12px; }
+  .editor-row { flex-wrap: wrap; gap: 10px; }
+  .row-text { flex-basis: calc(100% - 90px); }
+  .row-actions { margin-left: auto; }
+}
+@media (forced-colors: active) { .app-tile:hover { outline: 1px solid Highlight; } }

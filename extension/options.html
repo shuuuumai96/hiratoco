@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-dns-prefetch-control" content="off">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="optionsTitle">Hiratoco — アプリの編集</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="options.js"></script>
+</head>
+<body class="options">
+  <main class="settings-shell">
+    <header class="settings-header"><div><p class="eyebrow" data-i18n="settingsEyebrow">HIRATOCO / 設定</p><h1 data-i18n="editApps">アプリの編集</h1></div><button id="add" type="button" class="primary" data-i18n="addApp" disabled>＋ アプリを追加</button></header>
+    <p class="description" data-i18n="description">毎日使うサイトを、自分の順番に。変更は自動で保存されます。</p>
+    <p id="notice" role="status" hidden></p>
+    <button id="repair" type="button" data-i18n="repair" hidden>保存データを修復</button>
+    <p id="status" role="status" aria-live="polite"></p>
+    <section class="appearance" aria-label="表示設定" data-i18n-aria-label="displaySettings">
+      <div class="setting-field"><label for="theme" data-i18n="theme">配色</label><select id="theme" disabled><option value="auto" data-i18n="themeAuto">Firefox / OSに合わせる</option><option value="light" data-i18n="themeLight">ライト</option><option value="dark" data-i18n="themeDark">ダーク</option></select></div>
+      <div class="setting-field"><label for="language" data-i18n="language">表示言語</label><select id="language" disabled><option value="ja" lang="ja">日本語</option><option value="en" lang="en">English</option></select></div>
+    </section>
+    <section aria-labelledby="list-title"><div class="section-heading"><h2 id="list-title"><span data-i18n="registeredApps">登録済みアプリ</span> <span id="count"></span></h2></div><p id="reorder-help" class="hint" data-i18n="reorderHelp">行をドラッグして移動できます。キーボードでは「上へ」「下へ」、または行にフォーカスして Alt + ↑ / ↓ を使います。</p>
+      <ol id="apps" class="editor-list" aria-describedby="reorder-help"></ol>
+      <p id="empty" class="empty" data-i18n="optionsEmpty" hidden>まだアプリがありません。「アプリを追加」から登録してください。</p>
+    </section>
+    <section class="data-management" aria-labelledby="data-heading"><h2 id="data-heading" data-i18n="dataTitle">保存データ</h2><p class="hint" data-i18n="dataHelp">修復コピーには過去の名前・URL・画像も残ります。必要がなくなったコピーは削除してください。全データの消去では、登録・設定・修復コピーを消して初期状態に戻します。</p><p id="backup-count"></p><p id="data-notice" role="status"></p><div class="data-actions"><button id="delete-backups" type="button" data-i18n="deleteBackups" disabled>修復コピーをすべて削除</button><button id="erase-data" type="button" class="danger" data-i18n="eraseData" disabled>全データを消去</button></div></section>
+    <footer class="settings-footer" data-i18n="storagePrivacy">登録情報はこのFirefox内に保存されます。Hiratocoから外部への送信はありません。</footer>
+  </main>
+  <dialog id="editor" aria-labelledby="editor-title">
+    <form id="app-form" novalidate>
+      <h2 id="editor-title">アプリを追加</h2>
+      <label for="name" data-i18n="name">表示名</label><input id="name" name="name" required maxlength="50" autocomplete="off">
+      <label for="url" data-i18n="url">URL</label><input id="url" name="url" type="url" required maxlength="2048" placeholder="https://example.com/" autocomplete="off" spellcheck="false">
+      <label for="icon-file" data-i18n="iconFile">アイコン画像（任意）</label><input id="icon-file" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="image-help">
+      <p id="image-help" class="hint" data-i18n="imageHelp">PNG・JPEG・WebPの静止画、2MBまで。64 × 64pxのPNGに変換して保存します。</p>
+      <div class="image-preview"><img id="preview" src="icons/site.svg" alt="アイコンのプレビュー" data-i18n-alt="iconPreview" width="44" height="44"><button id="clear-icon" type="button" data-i18n="clearIcon">共通アイコンにする</button></div>
+      <p id="form-error" role="alert"></p>
+      <div class="dialog-actions"><button id="cancel" type="button" data-i18n="cancel">キャンセル</button><button id="save" type="submit" class="primary" data-i18n="save">保存</button></div>
+    </form>
+  </dialog>
+  <dialog id="delete-dialog" aria-labelledby="delete-title"><h2 id="delete-title" data-i18n="dialogDelete">アプリを削除</h2><p id="delete-message"></p><div class="dialog-actions"><button id="delete-cancel" type="button" data-i18n="cancel" autofocus>キャンセル</button><button id="delete-confirm" type="button" class="danger" data-i18n="delete">削除</button></div></dialog>
+  <dialog id="repair-dialog" aria-labelledby="repair-title"><h2 id="repair-title" data-i18n="repairTitle">保存データを修復しますか？</h2><p data-i18n="repairMessage">元データのコピーを保存してから修復します。不正な項目もコピーには残ります。コピーに保存期限はなく、「保存データ」で削除できます。アプリを削除すると、すべての修復コピーも消去します。</p><p id="repair-error" role="alert"></p><div class="dialog-actions"><button id="repair-cancel" type="button" data-i18n="cancel" autofocus>キャンセル</button><button id="repair-confirm" type="button" class="primary" data-i18n="repair">保存データを修復</button></div></dialog>
+  <dialog id="data-dialog" aria-labelledby="data-title"><h2 id="data-title"></h2><p id="data-message"></p><p id="data-error" role="alert"></p><div class="dialog-actions"><button id="data-cancel" type="button" data-i18n="cancel" autofocus>キャンセル</button><button id="data-confirm" type="button" class="danger">全データを消去</button></div></dialog>
+</body>
+</html>
