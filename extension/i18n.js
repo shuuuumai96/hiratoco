@@ -1,10 +1,12 @@
+import {extensionApi} from "./browser-api.js";
+
 export const DEFAULT_LANGUAGE = "ja";
 export const LANGUAGES = Object.freeze(["ja", "en"]);
 
-/** Use Firefox's UI locale only when there are no saved settings. */
+/** Use the browser's UI locale only when there are no saved settings. */
 export function initialLanguage() {
   try {
-    const locale = globalThis.browser?.i18n?.getUILanguage();
+    const locale = extensionApi()?.i18n?.getUILanguage();
     if (typeof locale !== "string" || !locale) return DEFAULT_LANGUAGE;
     return /^ja(?:-|$)/i.test(locale) ? "ja" : "en";
   } catch {
@@ -14,7 +16,7 @@ export function initialLanguage() {
 
 /**
  * Bundle both languages because the saved UI language can differ from
- * Firefox's locale.
+ * the browser's locale.
  */
 export const MESSAGES = Object.freeze({
   extensionName: ["Hiratoco — Webアプリランチャー", "Hiratoco — Web App Launcher"],
@@ -24,7 +26,7 @@ export const MESSAGES = Object.freeze({
   launcherLabel: ["アプリランチャー", "App launcher"],
   registeredApps: ["登録済みアプリ", "Your apps"],
   popupEmpty: ["アプリがありません。「編集」から追加できます。", "No apps yet. Select Edit to add one."],
-  openOptionsFailed: ["設定ページを開けません。拡張機能の管理画面から設定を開いてください。", "Unable to open settings. Open Hiratoco's preferences from the Add-ons Manager."],
+  openOptionsFailed: ["設定ページを開けません。拡張機能の管理画面から設定を開いてください。", "Unable to open settings. Open Hiratoco's preferences from the extension manager."],
   optionsTitle: ["Hiratoco — アプリの編集", "Hiratoco — Edit apps"],
   settingsEyebrow: ["HIRATOCO / 設定", "HIRATOCO / SETTINGS"],
   editApps: ["アプリの編集", "Edit apps"],
@@ -32,13 +34,13 @@ export const MESSAGES = Object.freeze({
   description: ["毎日使うサイトを、自分の順番に。変更は自動で保存されます。", "Arrange your everyday sites. Changes are saved automatically."],
   displaySettings: ["表示設定", "Display settings"],
   theme: ["配色", "Appearance"],
-  themeAuto: ["Firefox / OSに合わせる", "Follow Firefox / system"],
+  themeAuto: ["ブラウザー / OSに合わせる", "Follow browser / system"],
   themeLight: ["ライト", "Light"],
   themeDark: ["ダーク", "Dark"],
   language: ["表示言語", "Language"],
   reorderHelp: ["行をドラッグして移動できます。キーボードでは「上へ」「下へ」、または行にフォーカスして Alt + ↑ / ↓ を使います。", "Drag rows to reorder. Use Move up / Move down, or focus a row and press Alt + ↑ / ↓."],
   optionsEmpty: ["まだアプリがありません。「アプリを追加」から登録してください。", "No apps yet. Select Add app to get started."],
-  storagePrivacy: ["登録情報はこのFirefox内に保存されます。Hiratocoから外部への送信はありません。", "Your apps are stored in this Firefox profile. Hiratoco does not send them elsewhere."],
+  storagePrivacy: ["登録情報はこのブラウザー内に保存されます。Hiratocoから外部への送信はありません。", "Your apps are stored in this browser profile. Hiratoco does not send them elsewhere."],
   dialogAdd: ["アプリを追加", "Add app"],
   dialogEdit: ["アプリを編集", "Edit app"],
   name: ["表示名", "Name"],
@@ -88,10 +90,10 @@ export const MESSAGES = Object.freeze({
   noticeRepaired: ["不正な保存項目を除外して表示しています。元データを保護するため編集できません。設定画面から修復できます。", "Invalid entries are hidden. Editing is disabled to protect the original data. Open settings to repair it."],
   noticePrivate: ["プライベートウィンドウでは編集できません。通常のウィンドウから設定を開いてください。", "Editing is disabled in private windows. Open settings in a regular window."],
   noticeContainer: ["このタブでは安全に保存できないため編集できません。通常のウィンドウで、コンテナーを使わずに設定を開いてください。", "Editing is disabled because this tab cannot save safely. Open settings in a regular window without a container."],
-  noticeLockUnavailable: ["安全に保存するための機能を利用できません。通常のFirefoxウィンドウでページを開き直してください。", "Safe saving is unavailable. Reopen this page in a regular Firefox window."],
+  noticeLockUnavailable: ["安全に保存するための機能を利用できません。通常のブラウザーウィンドウでページを開き直してください。", "Safe saving is unavailable. Reopen this page in a regular browser window."],
   repair: ["保存データを修復", "Repair saved data"],
   repairTitle: ["保存データを修復しますか？", "Repair saved data?"],
-  repairMessage: ["元データのコピーをこのFirefox内に保存してから、表示中の一覧で置き換えます。不正な項目もコピーには残ります。コピーに保存期限はなく、設定画面の「保存データ」で削除できます。アプリを削除すると、すべての修復コピーも消去します。安全な項目がない場合は初期アプリに戻ります。", "A copy of the original data, including invalid entries, will be kept in this Firefox profile before replacing it with the displayed list. Copies have no expiry; delete them under Saved data. Deleting an app also erases all recovery copies. If no safe entries remain, default apps will be restored."],
+  repairMessage: ["元データのコピーをこのブラウザー内に保存してから、表示中の一覧で置き換えます。不正な項目もコピーには残ります。コピーに保存期限はなく、設定画面の「保存データ」で削除できます。アプリを削除すると、すべての修復コピーも消去します。安全な項目がない場合は初期アプリに戻ります。", "A copy of the original data, including invalid entries, will be kept in this browser profile before replacing it with the displayed list. Copies have no expiry; delete them under Saved data. Deleting an app also erases all recovery copies. If no safe entries remain, default apps will be restored."],
   dataTitle: ["保存データ", "Saved data"],
   dataHelp: ["修復コピーには過去の名前・URL・画像も残ります。必要がなくなったコピーは削除してください。全データの消去では、登録・設定・修復コピーを消して初期状態に戻します。", "Recovery copies retain past names, URLs and images. Delete copies you no longer need. Erasing all data removes apps, settings and recovery copies, then restores the initial display."],
   backupCount: ["修復コピー：{count}件", "Recovery copies: {count}"],

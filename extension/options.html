@@ -16,7 +16,7 @@
     <button id="repair" type="button" data-i18n="repair" hidden>保存データを修復</button>
     <p id="status" role="status" aria-live="polite"></p>
     <section class="appearance" aria-label="表示設定" data-i18n-aria-label="displaySettings">
-      <div class="setting-field"><label for="theme" data-i18n="theme">配色</label><select id="theme" disabled><option value="auto" data-i18n="themeAuto">Firefox / OSに合わせる</option><option value="light" data-i18n="themeLight">ライト</option><option value="dark" data-i18n="themeDark">ダーク</option></select></div>
+      <div class="setting-field"><label for="theme" data-i18n="theme">配色</label><select id="theme" disabled><option value="auto" data-i18n="themeAuto">ブラウザー / OSに合わせる</option><option value="light" data-i18n="themeLight">ライト</option><option value="dark" data-i18n="themeDark">ダーク</option></select></div>
       <div class="setting-field"><label for="language" data-i18n="language">表示言語</label><select id="language" disabled><option value="ja" lang="ja">日本語</option><option value="en" lang="en">English</option></select></div>
     </section>
     <section aria-labelledby="list-title"><div class="section-heading"><h2 id="list-title"><span data-i18n="registeredApps">登録済みアプリ</span> <span id="count"></span></h2></div><p id="reorder-help" class="hint" data-i18n="reorderHelp">行をドラッグして移動できます。キーボードでは「上へ」「下へ」、または行にフォーカスして Alt + ↑ / ↓ を使います。</p>
@@ -24,7 +24,7 @@
       <p id="empty" class="empty" data-i18n="optionsEmpty" hidden>まだアプリがありません。「アプリを追加」から登録してください。</p>
     </section>
     <section class="data-management" aria-labelledby="data-heading"><h2 id="data-heading" data-i18n="dataTitle">保存データ</h2><p class="hint" data-i18n="dataHelp">修復コピーには過去の名前・URL・画像も残ります。必要がなくなったコピーは削除してください。全データの消去では、登録・設定・修復コピーを消して初期状態に戻します。</p><p id="backup-count"></p><p id="data-notice" role="status"></p><div class="data-actions"><button id="delete-backups" type="button" data-i18n="deleteBackups" disabled>修復コピーをすべて削除</button><button id="erase-data" type="button" class="danger" data-i18n="eraseData" disabled>全データを消去</button></div></section>
-    <footer class="settings-footer" data-i18n="storagePrivacy">登録情報はこのFirefox内に保存されます。Hiratocoから外部への送信はありません。</footer>
+    <footer class="settings-footer" data-i18n="storagePrivacy">登録情報はこのブラウザー内に保存されます。Hiratocoから外部への送信はありません。</footer>
   </main>
   <dialog id="editor" aria-labelledby="editor-title">
     <form id="app-form" novalidate>

@@ -4,12 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/model.test.js tests/i18n.test.js tests/edit-conflicts.test.js tests/storage.test.js tests/icons.test.js tests/network.test.js",
+    "test": "node --test tests/model.test.js tests/i18n.test.js tests/edit-conflicts.test.js tests/storage.test.js tests/browser-api.test.js tests/icons.test.js tests/network.test.js tests/package.test.js",
     "test:ui": "node --test tests/ui.test.js",
     "test:firefox": "node --test tests/firefox.test.js",
+    "test:chromium": "node tools/package.mjs chromium && node --test tests/chromium.test.js",
     "test:privacy": "node --test tests/privacy-firefox.test.js",
     "lint": "addons-linter extension --warnings-as-errors",
-    "package": "node tools/package.mjs"
+    "package": "node tools/package.mjs",
+    "package:chromium": "node tools/package.mjs chromium"
   },
   "devDependencies": {
     "addons-linter": "10.14.0",

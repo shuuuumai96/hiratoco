@@ -5,12 +5,12 @@ import {defaults, DEFAULT_ICON, MAX_APPS, STORAGE_KEY, assertAppUnchanged} from 
 import {deleteAppState, deleteRecoveryCopies, eraseAllData, loadDataSummary, loadState, updateState, repairState, RECOVERY_PREFIX} from "../extension/storage.js";
 import {installLocks} from "./helpers/locks.js";
 
-function harness(source = defaults()) {
+function harness(source = defaults(), {chromium = false, namespace = "browser"} = {}) {
   installLocks();
   const saved = {[STORAGE_KEY]: structuredClone(source)};
   const writes = [];
   const control = {saved, writes, readFails: false, failBackup: false, failMain: false, failRemove: false, failClear: false};
-  globalThis.browser = {extension: {inIncognitoContext: false}, tabs: {getCurrent: async () => ({cookieStoreId: "firefox-default"})}, storage: {local: {
+  const api = {runtime: {getURL: path => `${chromium ? "chrome-extension" : "moz-extension"}://test/${path}`}, extension: {inIncognitoContext: false}, tabs: {getCurrent: async () => chromium ? {incognito: false} : {cookieStoreId: "firefox-default"}}, storage: {local: {
     get: async key => {
       if (control.readFails) throw new Error("read failure");
       const snapshot = structuredClone(key === null ? saved : {[key]: saved[key]});
@@ -28,6 +28,10 @@ function harness(source = defaults()) {
     remove: async keys => { if (control.failRemove) throw new Error("remove failure"); for (const key of keys) delete saved[key]; },
     clear: async () => { if (control.failClear) throw new Error("clear failure"); for (const key of Object.keys(saved)) delete saved[key]; }
   }}};
+  delete globalThis.browser;
+  delete globalThis.chrome;
+  globalThis[namespace] = api;
+  control.api = api;
   return control;
 }
 
@@ -280,4 +284,53 @@ test("erasure invalidates an old repair confirmation and also works for unknown 
   assert.equal((await loadDataSummary()).canManage,true);
   await eraseAllData();
   assert.deepEqual(control.saved,{});
+});
+
+test("Chromium settings save, serialize, repair and erase using real-shaped tabs in either API namespace", async () => {
+  for (const namespace of ["chrome", "browser"]) {
+    const {api, saved} = harness(defaults(), {chromium: true, namespace});
+    api.i18n = {getUILanguage: () => "en-US"};
+    assert.equal((await loadState()).readOnly, false);
+    await Promise.all([
+      updateState(state => ({...state, apps: state.apps.filter(app => app.id !== "account")})),
+      updateState(state => ({...state, settings: {...state.settings, theme: "dark"}}))
+    ]);
+    assert.equal(saved.appdock.apps.length, 13);
+    assert.equal(saved.appdock.settings.theme, "dark");
+    saved.appdock.apps[0].url = "http://example.com/corrupt";
+    const source = structuredClone(saved.appdock);
+    const loaded = await loadState();
+    assert.equal(loaded.readOnly, true);
+    assert.deepEqual(loaded.repairSource, source);
+    await repairState(source);
+    assert.equal((await loadDataSummary()).backups, 1);
+    assert.equal(saved.appdock.apps.length, 12);
+    await deleteAppState(saved.appdock.apps[0]);
+    assert.equal((await loadDataSummary()).backups, 0);
+    assert.equal(saved.appdock.apps.length, 11);
+    assert.equal((await eraseAllData()).settings.language, "en");
+    assert.deepEqual(saved, {});
+  }
+});
+
+test("Chromium private, unconfirmed and lockless contexts cannot mutate any stored data", async () => {
+  for (const restriction of ["private", "private-tab", "missing-tab", "unknown-tab", "context-failure", "locks", "unknown-origin"]) {
+    const {api, saved, writes} = harness(defaults(), {chromium: true, namespace: "chrome"});
+    if (restriction === "private") api.extension.inIncognitoContext = true;
+    if (restriction === "private-tab") api.tabs.getCurrent = async () => ({incognito: true});
+    if (restriction === "missing-tab") api.tabs.getCurrent = async () => undefined;
+    if (restriction === "unknown-tab") api.tabs.getCurrent = async () => ({});
+    if (restriction === "context-failure") api.tabs.getCurrent = async () => { throw new Error("tab query failed"); };
+    if (restriction === "locks") navigator.locks = undefined;
+    if (restriction === "unknown-origin") api.runtime.getURL = () => "https://example.com/";
+    const before = structuredClone(saved);
+    await assert.rejects(updateState(state => state), restriction);
+    await assert.rejects(repairState(null), restriction);
+    await assert.rejects(deleteAppState(saved.appdock.apps[0]), restriction);
+    await assert.rejects(deleteRecoveryCopies(), restriction);
+    await assert.rejects(eraseAllData(), restriction);
+    assert.equal((await loadDataSummary()).canManage, false, restriction);
+    assert.deepEqual(saved, before, restriction);
+    assert.equal(writes.length, 0, restriction);
+  }
 });

@@ -2,6 +2,9 @@ import {loadState} from "./storage.js";
 import {STORAGE_KEY} from "./model.js";
 import {applyTheme, appImage, appDisplayName} from "./ui.js";
 import {applyTranslations, t} from "./i18n.js";
+import {extensionApi} from "./browser-api.js";
+
+const browser = extensionApi();
 
 async function render() {
   const {state, notice} = await loadState();

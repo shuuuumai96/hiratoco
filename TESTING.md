@@ -1,5 +1,25 @@
 # 検証結果
 
+## Chromium対応（2026年10月25日）
+
+共通コードでFirefoxの `browser.*` とChromiumの `chrome.*` に対応しました。Firefoxのコンテナ制限を維持し、Chromiumでは通常タブを確認して編集を許可します。Chromium用manifestは共通原本から生成し、PNGアイコンを使い、シークレット利用を無効にします。要求権限は両方とも `storage` のみです。
+
+| 検証 | 結果 |
+| --- | --- |
+| `npm test` | 41件成功。両API名前空間での保存・修復・削除・全消去、制限付きコンテキストの書込拒否、両パッケージの内容・PNG寸法・ZIP再現性も確認 |
+| `npm run lint` | エラー0・警告0・通知0 |
+| `npm run test:ui` | 既存のUIシナリオ成功。拡張APIはモック |
+| `npm run test:chromium` | Windows、Playwright Chromium 145.0.7632.6で成功。生成した実拡張のmanifest・権限・CSP下での動作・初回表示言語・新規タブの遷移先・追加編集削除・並べ替え・日英切替・配色保存・再読込を確認。複数画面の保存排他、破損時の編集拒否、修復のキャンセルと確定、元データのコピー、PNG画像の64px変換・保存・再起動後の読込、未知キーと修復コピーを含む全消去も確認 |
+| `npm run test:firefox` | Firefox 158.0.1に今回生成したZIPを一時インストールして成功。既存の保存・表示・修復・コンテナ制限などを回帰確認 |
+| `npm run package` | Firefox用 `dist/hiratoco-0.1.0.zip` を生成。34ファイル |
+| `npm run package:chromium` | `test:chromium` が同じ生成処理を実行。`dist/hiratoco-chromium-0.1.0.zip` と `dist/chromium/` を生成。38ファイル |
+
+Chromium試験は専用の一時プロファイルを作り、再起動後の実ストレージも確認してから削除します。拡張APIのモックや試験用のbackgroundスクリプトは使いません。外部サイトへの遷移はローカル応答に置き換えるため、接続先のサービス表示やログインは未確認です。
+
+`PLAYWRIGHT_BROWSERS_PATH` に `C:\Users\mmmry\AppData\Local\ms-playwright` を指定しました。既存UI試験はサンドボックス内でlocalhost接続が `ERR_NETWORK_ACCESS_DENIED` となったため、UI・Chromium・Firefox試験をサンドボックス外で実行しました。通常利用のブラウザープロファイルは使っていません。
+
+実ツールバーのポップアップ、製品版Chrome・Edge、最低対象のChrome/Chromium 109、他OS、ストア配布・更新は未確認です。自動試験のポップアップは拡張ページとして開いています。今回 `test:privacy` は再実行していないため、DNS・HTTP監視については過去の結果と区別してください。
+
 ## v0.1.0の初回リポジトリ登録準備（2026年10月24日）
 
 `package.json`・`package-lock.json`のルート製品バージョンと `extension/manifest.json` を `0.1.0` に統一しました。`npm test` は37件成功、`npm run lint` はエラー・警告・通知すべて0でした。`npm run package` で `dist/hiratoco-0.1.0.zip` を生成し、33ファイルすべてが現在のソースと一致することを確認しました。今回の変更は製品バージョンと文書で、UI・Firefox試験は下記の直前の結果です。旧バージョン名の記載は当時の検証記録として残しています。

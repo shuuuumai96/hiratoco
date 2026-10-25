@@ -2,7 +2,7 @@
 
 [Back to README](../README.md)
 
-Hiratoco stores shortcuts, appearance and language preferences, and custom icons in the current Firefox profile. There is no sync or external backup. Settings are not encrypted as a secret vault; avoid saving URLs that contain private access tokens.
+Hiratoco stores shortcuts, appearance and language preferences, and custom icons in the current browser profile. Firefox and Chromium installations keep separate data; there is no sync or external backup. Settings are not encrypted as a secret vault; avoid saving URLs that contain private access tokens.
 
 ## Limits
 
@@ -18,15 +18,15 @@ SVG uploads, animated images, and remote image URLs are not supported. Files are
 
 ## Language and appearance
 
-With no saved data, Hiratoco uses Japanese for a Japanese Firefox UI and English for other UI languages. If the locale API is unavailable, it falls back to Japanese. A language selected in settings takes priority over Firefox's language. Your custom names and renamed default shortcuts are never translated.
+With no saved data, Hiratoco uses Japanese for a Japanese browser UI and English for other UI languages. If the locale API is unavailable, it falls back to Japanese. A language selected in settings takes priority over the browser's language. Your custom names and renamed default shortcuts are never translated.
 
 Older version 1 settings without a `language` field retain Japanese. Unsupported saved language values fall back to Japanese and require repair before further edits. Existing shortcuts are not automatically replaced when the bundled default list changes.
 
-Automatic appearance follows the `prefers-color-scheme` value Firefox provides to extension pages. It does not reproduce every color from a Firefox theme. You can select light or dark appearance explicitly.
+Automatic appearance follows the `prefers-color-scheme` value the browser provides to extension pages. It does not reproduce every color from a browser theme. You can select light or dark appearance explicitly.
 
 ## Storage format
 
-Data is stored under `browser.storage.local` key `appdock`. Array order determines shortcut order. The initial list is displayed without writing to storage; the first edit saves it.
+Data is stored under the extension's `storage.local` key `appdock`, using `browser.*` or `chrome.*` APIs as available. The format is shared by both packages. Array order determines shortcut order. The initial list is displayed without writing to storage; the first edit saves it.
 
 ```json
 {
@@ -45,7 +45,7 @@ Data is stored under `browser.storage.local` key `appdock`. Array order determin
 
 The app's display name for an unchanged default shortcut follows the selected UI language. This does not require rewriting its stored name.
 
-Writes use a shared Web Lock to avoid losing changes across settings pages. Stale edit or delete dialogs are rejected if another page has changed the same shortcut. Open settings in a regular, non-container tab: editing, repair, and data deletion are disabled in private windows or containers, and when safe locking is unavailable.
+Writes use a shared Web Lock to avoid losing changes across settings pages. Stale edit or delete dialogs are rejected if another page has changed the same shortcut. In Firefox, open settings in a regular, non-container tab: editing, repair, and data deletion are disabled in private windows or containers. The Chromium package disables incognito/InPrivate use. Both packages also refuse writes when the settings-tab context or safe locking is unavailable.
 
 ## Repairing damaged settings
 
@@ -73,4 +73,4 @@ The only requested permission is `storage`. There are no content scripts, backgr
 
 Extension pages disable DNS prefetch. A Content Security Policy blocks external requests, remote scripts, frames, and form submission from those pages. User text is inserted as text, and shortcut URLs are checked when entered and loaded.
 
-Opening a shortcut creates a normal link navigation in Firefox. Network requests, redirects, and authentication at the destination are handled by the browser and that website. Hiratoco does not guarantee the trustworthiness of a destination.
+Opening a shortcut creates a normal link navigation in the browser. Network requests, redirects, and authentication at the destination are handled by the browser and that website. Hiratoco does not guarantee the trustworthiness of a destination.

@@ -3,6 +3,9 @@ import {DEFAULT_ICON, MAX_APPS, STORAGE_KEY, assertAppUnchanged, moveApp, valida
 import {readIconFile} from "./icons.js";
 import {applyTheme, appImage, appDisplayName, button} from "./ui.js";
 import {AppError, applyTranslations, errorText, t} from "./i18n.js";
+import {extensionApi} from "./browser-api.js";
+
+const browser = extensionApi();
 
 const $ = selector => document.querySelector(selector);
 let state;
